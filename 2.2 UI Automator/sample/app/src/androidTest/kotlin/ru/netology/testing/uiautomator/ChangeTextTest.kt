@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 
-const val SETTINGS_PACKAGE = "com.android.settings"
+//const val SETTINGS_PACKAGE = "com.android.settings"
 const val MODEL_PACKAGE = "ru.netology.testing.uiautomator"
 
 const val TIMEOUT = 5000L
@@ -24,6 +24,7 @@ class ChangeTextTest {
 
     private lateinit var device: UiDevice
     private val textToSet = "Netology"
+    private val emptyText = "        "
 
 //    @Test
 //    fun testInternetSettings() {
@@ -107,6 +108,28 @@ class ChangeTextTest {
         device.findObject(By.res(packageName, "buttonChange")).click()
 
         val result = device.findObject(By.res(packageName, "textToBeChanged")).text
+        assertEquals(result, textToSet)
+    }
+    @Test
+    fun testChangeToEmptyText() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+        device.findObject(By.res(packageName, "userInput")).text = textToSet
+        device.findObject(By.res(packageName, "buttonChange")).click()
+        device.findObject(By.res(packageName, "userInput")).text = emptyText
+        device.findObject(By.res(packageName, "buttonChange")).click()
+
+        val result = device.findObject(By.res(packageName, "textToBeChanged")).text
+        assertEquals(result, textToSet)
+    }
+    @Test
+    fun testNewTab() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+        device.findObject(By.res(packageName, "userInput")).text = textToSet
+        device.findObject(By.res(packageName, "buttonActivity")).click()
+        device.wait(Until.hasObject(By.pkg(packageName)), TIMEOUT)
+        val result = device.findObject(By.res(packageName, "text")).text
         assertEquals(result, textToSet)
     }
 
